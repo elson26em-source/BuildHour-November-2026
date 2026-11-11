@@ -3,4 +3,15 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-artifacts/
+
+# Keep only the small, reproducible runtime inputs in git. The Chroma index is
+# rebuilt from these during deployment (see README).
+artifacts/01_raw/
+artifacts/02_chunks/*
+!artifacts/02_chunks/chunks.jsonl
+artifacts/03_embeddings/*
+!artifacts/03_embeddings/embeddings.npy
+!artifacts/03_embeddings/index_manifest.json
+artifacts/04_retrieval/
+artifacts/05_answers/
+artifacts/06_eval/

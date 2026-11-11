@@ -11,7 +11,8 @@ performance predictions. See [docs/disclaimer.md](docs/disclaimer.md).
 
 - Python 3.11
 - `requests` + BeautifulSoup for scraping
-- `sentence-transformers/all-MiniLM-L6-v2` for embeddings
+- `fastembed` (ONNX Runtime) running `sentence-transformers/all-MiniLM-L6-v2`
+  for embeddings, so no PyTorch is needed at runtime
 - ChromaDB for vector search
 - Groq by default, with OpenAI, Anthropic, Gemini, and Mistral-compatible
   clients in `src/generation/llm_client.py`
@@ -87,6 +88,24 @@ request IDs, retrieved chunks and scores, validation checks, and artifact paths.
 If the Chroma collection is empty, it tells you to run `python -m src.cli ingest`
 first.
 
+## Deploy on Render
+
+The app is tuned to fit a 512 MB instance: embeddings run through `fastembed`
+(ONNX Runtime) instead of PyTorch, and the Chroma index is rebuilt during the
+build from the committed `chunks.jsonl` and `embeddings.npy`.
+
+| Setting | Value |
+|---|---|
+| Environment | Python 3 |
+| Root Directory | *(blank)* |
+| Build Command | `pip install -r requirements.txt && python -m src.cli index --rebuild` |
+| Start Command | `streamlit run src/app/streamlit_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true` |
+
+Set these environment variables in the Render dashboard:
+
+- `GROQ_API_KEY` — key for live answers
+- `PYTHON_VERSION` — `3.11.9`
+
 ## Guardrails
 
 - PII is rejected before retrieval and is not persisted.
@@ -129,6 +148,10 @@ pytest -q
 | `artifacts/04_retrieval/` | Retrieval logs with redacted queries |
 | `artifacts/05_answers/` | Answer logs and validation diagnostics |
 | `artifacts/06_eval/` | Evaluation report |
+
+Only `artifacts/02_chunks/chunks.jsonl`, `artifacts/03_embeddings/embeddings.npy`,
+and `artifacts/03_embeddings/index_manifest.json` are committed. The rest is
+regenerated or treated as run output.
 
 ## Known Limitations
 

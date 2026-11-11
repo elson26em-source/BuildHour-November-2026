@@ -40,8 +40,47 @@ class EmbeddingResult:
     warnings: tuple[str, ...] = ()
 
 
+class _FastEmbedAdapter:
+    """Expose a sentence-transformers-like ``encode`` API over fastembed.
+
+    fastembed runs the same MiniLM model through ONNX Runtime, which avoids
+    importing PyTorch. PyTorch alone needs roughly 500 MB of RSS, so this
+    adapter is what makes the app fit on a 512 MB instance.
+    """
+
+    def __init__(self, model_name: str, text_embedding_cls: Any) -> None:
+        self._model = text_embedding_cls(model_name=model_name)
+
+    def get_sentence_embedding_dimension(self) -> int:
+        return int(self._model.embedding_size)
+
+    def encode(
+        self,
+        texts: Sequence[str],
+        batch_size: int = 32,
+        normalize_embeddings: bool = True,
+        show_progress_bar: bool = False,
+        convert_to_numpy: bool = True,
+    ) -> np.ndarray:
+        vectors = list(
+            self._model.embed(list(texts), batch_size=batch_size)
+        )
+        array = np.asarray(vectors, dtype=np.float32)
+        if array.ndim == 1:
+            array = array.reshape(1, -1)
+        if normalize_embeddings and array.size:
+            norms = np.linalg.norm(array, axis=1, keepdims=True)
+            norms[norms == 0.0] = 1.0
+            array = array / norms
+        return array
+
+
 class ChunkEmbedder:
-    """Lazily loads one SentenceTransformer model and reuses it."""
+    """Lazily loads one embedding model and reuses it.
+
+    Prefers fastembed (ONNX Runtime) when available so deployments do not
+    need PyTorch, then falls back to sentence-transformers.
+    """
 
     def __init__(
         self,
@@ -60,22 +99,41 @@ class ChunkEmbedder:
     def _ensure_model(self) -> Any:
         if self._model is not None:
             return self._model
+
+        errors: list[str] = []
+
+        try:
+            from fastembed import TextEmbedding
+        except ImportError as exc:
+            errors.append(f"fastembed: {exc}")
+        else:
+            try:
+                self._model = _FastEmbedAdapter(self.model_name, TextEmbedding)
+            except Exception as exc:
+                errors.append(f"fastembed: {exc}")
+            else:
+                self._model_loaded = True
+                return self._model
+
         try:
             from sentence_transformers import SentenceTransformer
         except ImportError as exc:
-            raise EmbeddingError(
-                "sentence-transformers is not installed. Install project "
-                "dependencies with `pip install -r requirements.txt`."
-            ) from exc
+            errors.append(f"sentence-transformers: {exc}")
+        else:
+            try:
+                self._model = SentenceTransformer(self.model_name)
+            except Exception as exc:
+                errors.append(f"sentence-transformers: {exc}")
+            else:
+                self._model_loaded = True
+                return self._model
 
-        try:
-            self._model = SentenceTransformer(self.model_name)
-        except Exception as exc:
-            raise EmbeddingError(
-                f"Could not load embedding model '{self.model_name}': {exc}"
-            ) from exc
-        self._model_loaded = True
-        return self._model
+        raise EmbeddingError(
+            f"Could not load embedding model '{self.model_name}'. Install "
+            "`fastembed` (lightweight, recommended) or "
+            "`sentence-transformers` with `pip install -r requirements.txt`. "
+            f"Details: {'; '.join(errors)}"
+        )
 
     @property
     def model(self) -> Any:

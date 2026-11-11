@@ -3,7 +3,9 @@ beautifulsoup4>=4.12
 PyYAML>=6.0
 python-dotenv>=1.0
 numpy>=1.26
-sentence-transformers>=3.0
+# fastembed runs MiniLM through ONNX Runtime instead of PyTorch, keeping the
+# runtime under ~250 MB so the app fits on a 512 MB Render instance.
+fastembed>=0.4
 chromadb>=0.5
 streamlit>=1.30
 pytest>=8.0
