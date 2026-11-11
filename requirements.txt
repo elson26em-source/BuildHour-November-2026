@@ -1,0 +1,11 @@
+requests>=2.31
+beautifulsoup4>=4.12
+PyYAML>=6.0
+python-dotenv>=1.0
+numpy>=1.26
+sentence-transformers>=3.0
+chromadb>=0.5
+streamlit>=1.30
+pytest>=8.0
+# Optional fallback if Groww stops serving content in static HTML:
+# playwright>=1.40

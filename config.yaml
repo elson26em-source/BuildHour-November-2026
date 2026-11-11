@@ -1,0 +1,55 @@
+app:
+  name: "Groww MF Facts Assistant"
+  disclaimer: "Facts-only. No investment advice."
+  max_answer_sentences: 3
+
+data:
+  follow_internal_links: false
+  source_urls:
+    - "https://groww.in/mutual-funds/amc/hdfc-mutual-funds"
+    - "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth"
+    - "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth"
+    - "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth"
+    - "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth"
+
+scraping:
+  timeout_seconds: 45
+  delay_seconds: 1.0
+  max_retries: 2
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36 GrowwMF-FAQ-Demo/1.0"
+  use_playwright_fallback: false
+
+paths:
+  artifacts_dir: "artifacts"
+  raw_dir: "artifacts/01_raw"
+  html_dir: "artifacts/01_raw/html"
+  manifest_path: "artifacts/01_raw/manifest.json"
+  chunks_dir: "artifacts/02_chunks"
+  embeddings_dir: "artifacts/03_embeddings"
+  retrieval_dir: "artifacts/04_retrieval"
+  answers_dir: "artifacts/05_answers"
+
+chunking:
+  strategy: "section_aware"
+  max_tokens: 450
+  overlap_tokens: 50
+
+embedding:
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  normalize: true
+  batch_size: 32
+
+vector_db:
+  provider: "chromadb"
+  persist_path: "artifacts/03_embeddings/chroma"
+  collection: "groww_mf_faq"
+
+retrieval:
+  top_k: 5
+  similarity_threshold: 0.35
+
+llm:
+  provider: "groq"
+  model: "qwen/qwen3.8-27b"
+  temperature: 0.0
+  max_tokens: 300

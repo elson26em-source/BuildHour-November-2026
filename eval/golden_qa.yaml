@@ -1,0 +1,60 @@
+- id: F1
+  query: What is the expense ratio of HDFC Large Cap Fund?
+  expected_status: answered
+  expected_citation: scheme
+  expected_section: expense_ratio
+  expected_scheme: HDFC Large Cap Fund Direct Growth
+  require_last_updated: true
+  max_sentences: 3
+
+- id: F2
+  query: What is the lock-in period for HDFC ELSS Tax Saver Fund?
+  expected_status: answered
+  expected_citation: scheme
+  expected_section: lock_in
+  expected_scheme: HDFC ELSS Tax Saver Fund Direct Plan Growth
+  require_last_updated: true
+  max_sentences: 3
+
+- id: F3
+  query: What is the exit load for HDFC Flexi Cap Fund?
+  expected_status: answered
+  expected_citation: scheme
+  expected_section: exit_load
+  expected_scheme: HDFC Flexi Cap Direct Plan Growth
+  require_last_updated: true
+  max_sentences: 3
+
+- id: F4
+  query: What is the minimum SIP for HDFC Mid Cap Fund?
+  expected_status: answered
+  expected_citation: scheme
+  expected_section: minimum_sip
+  expected_scheme: HDFC Mid Cap Fund Direct Growth
+  require_last_updated: true
+  max_sentences: 3
+
+- id: F5
+  query: What is the riskometer level of HDFC Large Cap Fund?
+  expected_status: answered
+  expected_citation: scheme
+  expected_section: riskometer
+  expected_scheme: HDFC Large Cap Fund Direct Growth
+  require_last_updated: true
+  max_sentences: 3
+
+- id: F6
+  query: What is the benchmark for HDFC ELSS Tax Saver Fund?
+  expected_status: answered
+  expected_citation: scheme
+  expected_section: benchmark
+  expected_scheme: HDFC ELSS Tax Saver Fund Direct Plan Growth
+  require_last_updated: true
+  max_sentences: 3
+
+- id: F7
+  query: How can I download my capital-gains statement?
+  expected_status: section_unavailable
+  expected_citation: any
+  require_last_updated: true
+  max_sentences: 3
