@@ -29,19 +29,18 @@ html, body, .stApp, [class*="css"] {
 }
 
 .stApp {
-    background: #F8FAFC;
-    color: #0F172A;
+    background: #FAFAFF;
+    color: #1E293B;
 }
 
 .stApp::before {
     content: "";
     position: fixed;
-    top: -8%;
-    right: 8%;
-    width: 580px;
-    height: 580px;
-    background: radial-gradient(circle, rgba(192, 132, 252, 0.30), transparent 70%);
-    filter: blur(120px);
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at top right, rgba(233, 213, 255, 0.35) 0%, rgba(243, 232, 255, 0.15) 50%, transparent 75%);
     pointer-events: none;
     z-index: 0;
 }
@@ -49,12 +48,11 @@ html, body, .stApp, [class*="css"] {
 .stApp::after {
     content: "";
     position: fixed;
-    bottom: -5%;
-    left: 12%;
-    width: 520px;
-    height: 520px;
-    background: radial-gradient(circle, rgba(250, 204, 21, 0.26), transparent 70%);
-    filter: blur(120px);
+    bottom: 0;
+    left: 0;
+    width: 50vw;
+    height: 40vh;
+    background: radial-gradient(ellipse at bottom left, rgba(254, 240, 138, 0.12) 0%, rgba(253, 230, 138, 0.05) 40%, transparent 70%);
     pointer-events: none;
     z-index: 0;
 }
@@ -71,13 +69,12 @@ html, body, .stApp, [class*="css"] {
 
 h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
     letter-spacing: -0.03em;
     text-align: center;
-    background: linear-gradient(90deg, #0F172A 0%, #7E22CE 55%, #D97706 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #7E22CE !important;
+    -webkit-text-fill-color: #7E22CE;
+    background: none;
 }
 
 [data-testid="stMarkdownContainer"] p {
@@ -86,205 +83,208 @@ h1 {
 
 .growchat-hero {
     text-align: center;
-    margin-bottom: 1.1rem;
+    margin-bottom: 0.4rem;
 }
 
 .growchat-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 0.9rem;
-    margin-bottom: 0.7rem;
+    gap: 0.4rem;
+    padding: 0.28rem 0.75rem;
     border-radius: 999px;
-    background: linear-gradient(90deg, #FAF5FF 0%, #FFFFFF 50%, #FFFBEB 100%);
-    border: 1px solid rgba(216, 180, 254, 0.7);
-    color: #0F172A;
+    background: rgba(255, 251, 235, 0.4);
+    border: 1px solid rgba(253, 230, 138, 0.8);
+    color: #334155;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .growchat-badge .dot {
     width: 0.45rem;
     height: 0.45rem;
     border-radius: 999px;
-    background: #F59E0B;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    background: #FBBF24;
+    display: inline-block;
 }
 
 .growchat-subtitle {
-    color: #1E293B;
+    color: #334155;
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
     max-width: 34rem;
-    margin: 0.35rem auto 0 auto;
+    margin: 0.2rem auto 0 auto;
 }
 
 .growchat-suggested {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    margin: 0.2rem 0 0.7rem 0;
-    color: #0F172A;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    margin: 0.6rem 0 0.9rem 0;
 }
 
-.growchat-suggested .line {
-    height: 1px;
-    width: 2rem;
-    background: #E2E8F0;
+.growchat-suggested::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.growchat-suggested span {
+    position: relative;
+    z-index: 1;
+    background: #FAFAFF;
+    padding: 0 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #64748B;
 }
 
 [data-testid="stAlert"] {
-    background: linear-gradient(90deg, rgba(250, 245, 255, 0.9) 0%, #FFFFFF 50%, rgba(255, 251, 235, 0.9) 100%);
-    border: 1px solid rgba(216, 180, 254, 0.7);
-    border-radius: 1rem;
-    box-shadow: 0 4px 20px -2px rgba(139, 92, 246, 0.10);
+    background: #F6F8FE;
+    border: 1px solid #E2E8F8;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+[data-testid="stAlert"] [data-testid="stAlertContentInfo"] svg,
+[data-testid="stAlert"] [data-testid="stAlertContentWarning"] svg {
+    display: none;
 }
 
 [data-testid="stAlert"] p {
-    color: #6B21A8 !important;
-    font-weight: 600;
+    color: #553C9A !important;
+    font-weight: 500;
+    text-align: left;
 }
 
 .stButton > button {
     width: 100%;
-    background: #FFFFFF;
-    color: #0F172A;
-    border: 1px solid rgba(216, 180, 254, 0.9);
+    background: rgba(255, 255, 255, 0.9);
+    color: #334155;
+    border: 1px solid rgba(226, 232, 240, 0.8);
     border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.8rem;
-    padding: 0.6rem 1rem;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 0.78rem;
+    padding: 0.45rem 0.9rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.18s ease;
 }
 
 .stButton > button::after {
     content: " \\2197";
-    color: #CA8A04;
-    font-weight: 700;
+    color: #F59E0B;
+    font-weight: 500;
 }
 
 .stButton > button:hover {
-    background: #FAF5FF;
-    border-color: #C084FC;
+    background: #F8FAFC;
+    border-color: #CBD5E1;
     color: #0F172A;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px -2px rgba(168, 85, 247, 0.25);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 [data-testid="stChatMessage"] {
-    position: relative;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(216, 180, 254, 0.6);
-    border-radius: 1rem;
-    padding: 1rem 1.1rem;
-    box-shadow: 0 12px 36px -6px rgba(139, 92, 246, 0.12),
-        0 4px 16px -4px rgba(245, 158, 11, 0.08);
-    backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    border-radius: 0.75rem;
+    padding: 0.9rem 1rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
 }
 
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    background: rgba(255, 255, 255, 0.85);
-    border-color: rgba(216, 180, 254, 0.55);
-    box-shadow: 0 4px 20px -2px rgba(139, 92, 246, 0.08);
-}
-
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"])::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #9333EA, #FACC15, #9333EA);
+    border-color: #F3E8FF;
+    align-items: center;
 }
 
 [data-testid="stChatMessageAvatarUser"] {
-    background: #F3E8FF !important;
-    border: 1px solid rgba(216, 180, 254, 0.8) !important;
-    border-radius: 0.75rem !important;
-    color: #7E22CE !important;
+    background: #FAF5FF !important;
+    border: 1px solid #F3E8FF !important;
+    border-radius: 0.5rem !important;
+    color: #8B5CF6 !important;
 }
 
 [data-testid="stChatMessageAvatarAssistant"] {
-    background: linear-gradient(135deg, #4C1D95, #0F172A) !important;
-    border: 1px solid rgba(126, 34, 206, 0.4) !important;
-    border-radius: 0.75rem !important;
-    color: #FACC15 !important;
+    background: #2E1065 !important;
+    border: 1px solid rgba(46, 16, 101, 0.6) !important;
+    border-radius: 0.5rem !important;
+    color: #FCD34D !important;
 }
 
 [data-testid="stChatInput"] {
-    background: rgba(255, 255, 255, 0.95);
+    background: #FFFFFF;
     border: 1px solid rgba(216, 180, 254, 0.8);
     border-radius: 1rem;
-    box-shadow: 0 8px 30px -5px rgba(139, 92, 246, 0.12),
-        0 4px 12px -2px rgba(245, 158, 11, 0.08);
+    box-shadow: 0 10px 30px -10px rgba(147, 51, 234, 0.18);
 }
 
 [data-testid="stChatInput"]:focus-within {
-    border-color: #FBBF24;
-    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+    border-color: #A855F7;
+    box-shadow: 0 0 0 3px rgba(216, 180, 254, 0.35);
 }
 
 [data-testid="stChatInputTextArea"] {
-    color: #0F172A !important;
+    color: #1E293B !important;
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 [data-testid="stChatInputSubmitButton"] {
-    background: linear-gradient(135deg, #7E22CE, #9333EA, #D97706) !important;
+    background: linear-gradient(135deg, #9333EA, #C026D3) !important;
     color: #FFFFFF !important;
-    border-radius: 0.75rem !important;
+    border-radius: 999px !important;
 }
 
 [data-testid="stChatInputSubmitButton"]:hover {
-    background: linear-gradient(135deg, #6B21A8, #7E22CE, #B45309) !important;
+    background: linear-gradient(135deg, #7E22CE, #A21CAF) !important;
     box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
 }
 
 [data-testid="stExpander"] {
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(216, 180, 254, 0.6);
-    border-radius: 0.9rem;
+    background: transparent;
+    border: 1px solid rgba(226, 232, 240, 0.7);
+    border-radius: 0.5rem;
 }
 
 [data-testid="stExpander"] summary {
-    color: #475569;
+    color: #94A3B8;
+    font-size: 0.78rem;
 }
 
 [data-testid="stCaptionContainer"],
 .stCaption {
-    color: #64748B !important;
+    color: #94A3B8 !important;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
 }
 
 [data-testid="stLinkButton"] a {
-    background: #FAF5FF;
-    color: #6B21A8;
-    border: 1px solid rgba(192, 132, 252, 0.5);
+    background: rgba(250, 245, 255, 0.8);
+    color: #581C87;
+    border: 1px solid rgba(233, 213, 255, 0.9);
     border-radius: 999px;
-    padding: 0.3rem 0.8rem;
-    font-family: 'JetBrains Mono', monospace;
+    padding: 0.25rem 0.75rem;
     font-size: 0.72rem;
+    font-weight: 500;
     text-decoration: none;
 }
 
 [data-testid="stLinkButton"] a:hover {
     background: #F3E8FF;
-    color: #581C87;
-    border-color: #A855F7;
+    color: #6B21A8;
+    border-color: #D8B4FE;
 }
 
 [data-testid="stTextInput"] input {
@@ -517,9 +517,8 @@ def main() -> None:
         st.session_state.messages = []
 
     st.markdown(
-        '<div class="growchat-suggested"><span class="line"></span>'
-        "Suggested Queries"
-        '<span class="line"></span></div>',
+        '<div class="growchat-suggested">'
+        "<span>Suggested Queries</span></div>",
         unsafe_allow_html=True,
     )
     columns = st.columns(len(EXAMPLES))
