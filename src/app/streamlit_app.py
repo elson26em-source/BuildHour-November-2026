@@ -22,151 +22,245 @@ EXAMPLES = (
 
 STYLES = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 html, body, .stApp, [class*="css"] {
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .stApp {
-    background:
-        radial-gradient(circle at 18% 0%, #101a2e 0%, #0B0F17 42%, #090D14 100%);
-    color: #E2E8F0;
+    background: #F8FAFC;
+    color: #0F172A;
+}
+
+.stApp::before {
+    content: "";
+    position: fixed;
+    top: -8%;
+    right: 8%;
+    width: 580px;
+    height: 580px;
+    background: radial-gradient(circle, rgba(192, 132, 252, 0.30), transparent 70%);
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.stApp::after {
+    content: "";
+    position: fixed;
+    bottom: -5%;
+    left: 12%;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(250, 204, 21, 0.26), transparent 70%);
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
 }
 
 [data-testid="stHeader"] {
-    background: rgba(11, 15, 23, 0.65);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(30, 41, 59, 0.45);
+    background: transparent;
+    border-bottom: none;
 }
 
-[data-testid="stSidebar"],
-[data-testid="stSidebarContent"] {
-    background: #090D14;
-    border-right: 1px solid rgba(30, 41, 59, 0.8);
-}
-
-[data-testid="stSidebar"] p,
-[data-testid="stSidebar"] span,
-[data-testid="stSidebar"] label {
-    color: #94A3B8;
-}
-
-[data-testid="stSidebar"] h1,
-[data-testid="stSidebar"] h2,
-[data-testid="stSidebar"] h3 {
-    color: #E2E8F0;
+[data-testid="stAppViewContainer"] > section {
+    position: relative;
+    z-index: 1;
 }
 
 h1 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 800 !important;
-    letter-spacing: -0.02em;
-    background: linear-gradient(90deg, #FFFFFF 0%, #C7D2FE 55%, #6EE7B7 100%);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700 !important;
+    letter-spacing: -0.03em;
+    text-align: center;
+    background: linear-gradient(90deg, #0F172A 0%, #7E22CE 55%, #D97706 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 [data-testid="stMarkdownContainer"] p {
-    color: #CBD5E1;
+    color: #1E293B;
+}
+
+.growchat-hero {
+    text-align: center;
+    margin-bottom: 1.1rem;
+}
+
+.growchat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.9rem;
+    margin-bottom: 0.7rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #FAF5FF 0%, #FFFFFF 50%, #FFFBEB 100%);
+    border: 1px solid rgba(216, 180, 254, 0.7);
+    color: #0F172A;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.growchat-badge .dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: #F59E0B;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.growchat-subtitle {
+    color: #1E293B;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    max-width: 34rem;
+    margin: 0.35rem auto 0 auto;
+}
+
+.growchat-suggested {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.2rem 0 0.7rem 0;
+    color: #0F172A;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.growchat-suggested .line {
+    height: 1px;
+    width: 2rem;
+    background: #E2E8F0;
 }
 
 [data-testid="stAlert"] {
-    background: linear-gradient(135deg, rgba(30, 58, 138, 0.22) 0%, rgba(15, 23, 42, 0.65) 100%);
-    border: 1px solid rgba(59, 130, 246, 0.28);
-    border-radius: 0.75rem;
-    box-shadow: 0 0 25px -4px rgba(59, 130, 246, 0.28);
+    background: linear-gradient(90deg, rgba(250, 245, 255, 0.9) 0%, #FFFFFF 50%, rgba(255, 251, 235, 0.9) 100%);
+    border: 1px solid rgba(216, 180, 254, 0.7);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px -2px rgba(139, 92, 246, 0.10);
 }
 
 [data-testid="stAlert"] p {
-    color: #93C5FD !important;
+    color: #6B21A8 !important;
     font-weight: 600;
 }
 
 .stButton > button {
     width: 100%;
-    background: rgba(30, 41, 59, 0.8);
-    color: #CBD5E1;
-    border: 1px solid #334155;
-    border-radius: 0.6rem;
+    background: #FFFFFF;
+    color: #0F172A;
+    border: 1px solid rgba(216, 180, 254, 0.9);
+    border-radius: 999px;
+    font-weight: 600;
     font-size: 0.8rem;
-    text-align: left;
-    padding: 0.55rem 0.9rem;
-    transition: all 0.18s ease;
+    padding: 0.6rem 1rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: all 0.2s ease;
+}
+
+.stButton > button::after {
+    content: " \\2197";
+    color: #CA8A04;
+    font-weight: 700;
 }
 
 .stButton > button:hover {
-    background: rgba(51, 65, 85, 0.9);
-    color: #FFFFFF;
-    border-color: rgba(59, 130, 246, 0.6);
-    box-shadow: 0 0 25px -4px rgba(59, 130, 246, 0.28);
+    background: #FAF5FF;
+    border-color: #C084FC;
+    color: #0F172A;
     transform: translateY(-1px);
+    box-shadow: 0 4px 16px -2px rgba(168, 85, 247, 0.25);
 }
 
 [data-testid="stChatMessage"] {
-    background: rgba(16, 23, 38, 0.9);
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    border-radius: 0.85rem;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(216, 180, 254, 0.6);
+    border-radius: 1rem;
     padding: 1rem 1.1rem;
-    box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.25);
-    backdrop-filter: blur(8px);
+    box-shadow: 0 12px 36px -6px rgba(139, 92, 246, 0.12),
+        0 4px 16px -4px rgba(245, 158, 11, 0.08);
+    backdrop-filter: blur(14px);
 }
 
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    background: #151C2A;
-    border-color: rgba(51, 65, 85, 0.6);
-    box-shadow: none;
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(216, 180, 254, 0.55);
+    box-shadow: 0 4px 20px -2px rgba(139, 92, 246, 0.08);
+}
+
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"])::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #9333EA, #FACC15, #9333EA);
 }
 
 [data-testid="stChatMessageAvatarUser"] {
-    background: linear-gradient(135deg, #FB7185, #F9A8D4) !important;
+    background: #F3E8FF !important;
+    border: 1px solid rgba(216, 180, 254, 0.8) !important;
     border-radius: 0.75rem !important;
+    color: #7E22CE !important;
 }
 
 [data-testid="stChatMessageAvatarAssistant"] {
-    background: rgba(16, 185, 129, 0.15) !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    background: linear-gradient(135deg, #4C1D95, #0F172A) !important;
+    border: 1px solid rgba(126, 34, 206, 0.4) !important;
     border-radius: 0.75rem !important;
-    color: #34D399 !important;
+    color: #FACC15 !important;
 }
 
 [data-testid="stChatInput"] {
-    background: #141B29;
-    border: 1px solid rgba(51, 65, 85, 0.8);
-    border-radius: 0.85rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(216, 180, 254, 0.8);
+    border-radius: 1rem;
+    box-shadow: 0 8px 30px -5px rgba(139, 92, 246, 0.12),
+        0 4px 12px -2px rgba(245, 158, 11, 0.08);
 }
 
 [data-testid="stChatInput"]:focus-within {
-    border-color: #3B82F6;
-    box-shadow: 0 0 25px -4px rgba(59, 130, 246, 0.35);
+    border-color: #FBBF24;
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
 }
 
 [data-testid="stChatInputTextArea"] {
-    color: #E2E8F0 !important;
+    color: #0F172A !important;
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 [data-testid="stChatInputSubmitButton"] {
-    background: #334155 !important;
-    color: #E2E8F0 !important;
-    border-radius: 0.5rem !important;
+    background: linear-gradient(135deg, #7E22CE, #9333EA, #D97706) !important;
+    color: #FFFFFF !important;
+    border-radius: 0.75rem !important;
 }
 
 [data-testid="stChatInputSubmitButton"]:hover {
-    background: #10B981 !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #6B21A8, #7E22CE, #B45309) !important;
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
 }
 
 [data-testid="stExpander"] {
-    background: rgba(19, 25, 38, 0.7);
-    border: 1px solid rgba(51, 65, 85, 0.5);
-    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(216, 180, 254, 0.6);
+    border-radius: 0.9rem;
 }
 
 [data-testid="stExpander"] summary {
-    color: #94A3B8;
+    color: #475569;
 }
 
 [data-testid="stCaptionContainer"],
@@ -177,61 +271,41 @@ h1 {
 }
 
 [data-testid="stLinkButton"] a {
-    background: rgba(59, 130, 246, 0.12);
-    color: #93C5FD;
-    border: 1px solid rgba(59, 130, 246, 0.25);
+    background: #FAF5FF;
+    color: #6B21A8;
+    border: 1px solid rgba(192, 132, 252, 0.5);
     border-radius: 999px;
-    padding: 0.3rem 0.75rem;
+    padding: 0.3rem 0.8rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
     text-decoration: none;
 }
 
 [data-testid="stLinkButton"] a:hover {
-    background: rgba(59, 130, 246, 0.22);
-    color: #DBEAFE;
+    background: #F3E8FF;
+    color: #581C87;
+    border-color: #A855F7;
 }
 
 [data-testid="stTextInput"] input {
-    background: #111724;
-    border: 1px solid rgba(51, 65, 85, 0.8);
-    border-radius: 0.5rem;
-    color: #34D399;
+    background: #FFFFFF;
+    border: 1px solid rgba(216, 180, 254, 0.8);
+    border-radius: 0.6rem;
+    color: #6B21A8;
     font-family: 'JetBrains Mono', monospace;
 }
 
 [data-testid="stCodeBlock"] code,
 [data-testid="stCode"] {
     font-family: 'JetBrains Mono', monospace;
-    background: #111724;
-    color: #34D399;
+    background: #F8FAFC;
+    color: #6B21A8;
 }
 
-.groww-subtitle {
-    color: #CBD5E1;
-    font-size: 0.95rem;
-    margin-top: -0.6rem;
-    margin-bottom: 0.4rem;
-}
-
-.groww-status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1.2rem;
-    padding-top: 0.9rem;
-    border-top: 1px solid rgba(30, 41, 59, 0.8);
-    color: #64748B;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-}
-
-.groww-status .dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 999px;
-    background: #34D399;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+[data-testid="stSidebar"],
+[data-testid="stSidebarContent"] {
+    background: #FFFFFF;
+    border-right: 1px solid rgba(226, 232, 240, 0.9);
 }
 
 #MainMenu, footer {
@@ -393,16 +467,24 @@ def _handle_query(answerer: Answerer, query: str) -> None:
 
 def main() -> None:
     st.set_page_config(
-        page_title="Groww MF FAQ Assistant",
+        page_title="GrowChat - Mutual Fund FAQ Assistant",
         layout="centered",
+        initial_sidebar_state="collapsed",
     )
 
     _inject_styles()
 
-    st.title("Groww MF FAQ Assistant")
     st.markdown(
-        '<p class="groww-subtitle">Ask factual questions about the HDFC '
-        "mutual fund pages in the knowledge base.</p>",
+        '<div class="growchat-hero">'
+        '<div class="growchat-badge"><span class="dot"></span>'
+        "Mutual Fund Intelligence &bull; Facts-Only</div>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    st.title("GrowChat")
+    st.markdown(
+        '<p class="growchat-subtitle">Instant factual fund stats, expense '
+        "ratios, portfolio compositions, and exit loads.</p>",
         unsafe_allow_html=True,
     )
     st.info(DISCLAIMER)
@@ -431,16 +513,15 @@ def main() -> None:
             "answers will use the safe fallback until it is set in .env."
         )
 
-    st.sidebar.markdown(
-        '<div class="groww-status"><span class="dot"></span>'
-        "<span>ChromaDB · fastembed</span></div>",
-        unsafe_allow_html=True,
-    )
-
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    st.write("**Try an example:**")
+    st.markdown(
+        '<div class="growchat-suggested"><span class="line"></span>'
+        "Suggested Queries"
+        '<span class="line"></span></div>',
+        unsafe_allow_html=True,
+    )
     columns = st.columns(len(EXAMPLES))
     for column, example in zip(columns, EXAMPLES):
         with column:
@@ -449,7 +530,10 @@ def main() -> None:
 
     _render_history()
 
-    prompt = st.chat_input("Ask a factual question about these funds...")
+    prompt = st.chat_input(
+        "Ask a factual question about these funds (managers, expense "
+        "ratio, exit loads)..."
+    )
     if prompt:
         _handle_query(answerer, prompt)
 

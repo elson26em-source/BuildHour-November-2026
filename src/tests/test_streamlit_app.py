@@ -17,7 +17,7 @@ def test_streamlit_app_renders_examples_and_disclaimer() -> None:
     app.run()
 
     assert not app.exception
-    assert app.title[0].value == "Groww MF FAQ Assistant"
+    assert app.title[0].value == "GrowChat"
     assert [button.label for button in app.button] == [
         "What is the expense ratio of HDFC Large Cap Fund?",
         "What is the lock-in period for HDFC ELSS Tax Saver Fund?",
