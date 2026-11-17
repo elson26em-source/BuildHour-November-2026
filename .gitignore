@@ -4,8 +4,8 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-# Keep only the small, reproducible runtime inputs in git. The Chroma index is
-# rebuilt from these during deployment (see README).
+# Prebuilt, read-only deployment assets live in assets/ and are committed.
+# Keep only the small, reproducible runtime inputs in git.
 artifacts/01_raw/
 artifacts/02_chunks/*
 !artifacts/02_chunks/chunks.jsonl

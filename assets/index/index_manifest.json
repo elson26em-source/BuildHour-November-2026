@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-11-11T11:52:20.099775+00:00",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "normalize": true,
+  "batch_size": 32,
+  "dimension": 384,
+  "chunk_count": 51,
+  "embedding_count": 51,
+  "dtype": "float32",
+  "chunks_path": "C:\\Users\\Elson\\Grow Chatbot\\artifacts\\02_chunks\\chunks.jsonl",
+  "embeddings_path": "C:\\Users\\Elson\\Grow Chatbot\\artifacts\\03_embeddings\\embeddings.npy"
+}

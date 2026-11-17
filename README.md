@@ -9,14 +9,16 @@ performance predictions. See [docs/disclaimer.md](docs/disclaimer.md).
 
 ## Stack
 
-- Python 3.11
+- Python 3.11 locally, 3.12+ on Vercel
 - `requests` + BeautifulSoup for scraping
 - `fastembed` (ONNX Runtime) running `sentence-transformers/all-MiniLM-L6-v2`
   for embeddings, so no PyTorch is needed at runtime
-- ChromaDB for vector search
+- ChromaDB for building the index offline; the deployed API serves the
+  prebuilt `embeddings.npy` read-only with numpy (no database process)
 - Groq by default, with OpenAI, Anthropic, Gemini, and Mistral-compatible
   clients in `src/generation/llm_client.py`
-- Streamlit UI
+- FastAPI backend (`app.py`) and a dependency-free HTML/JS chat page
+  (`static/index.html`) served from the same origin under `/api/*`
 
 ## Setup
 
@@ -76,35 +78,44 @@ re-running the command. Answers include a single source URL and a
 Retrieval and answer artifacts are written under `artifacts/04_retrieval/` and
 `artifacts/05_answers/`.
 
-## Streamlit UI
+## Web UI
 
 ```powershell
-streamlit run src/app/streamlit_app.py
+pip install uvicorn
+uvicorn app:app --reload
 ```
 
-The UI provides a persistent facts-only disclaimer, three example questions, a
-chat input, citation links, last-updated lines, and a diagnostics expander with
+Open `http://localhost:8000`. The page calls the backend through relative
+`/api/config` and `/api/ask` routes, so the same build works locally and on
+Vercel. It keeps the facts-only disclaimer, three example questions, chat
+history, citation links, last-updated lines, and a diagnostics expander with
 request IDs, retrieved chunks and scores, validation checks, and artifact paths.
-If the Chroma collection is empty, it tells you to run `python -m src.cli ingest`
-first.
+If the collection is empty, it shows the ingestion hint.
 
-## Deploy on Render
+## Deploy on Vercel (Hobby)
 
-The app is tuned to fit a 512 MB instance: embeddings run through `fastembed`
-(ONNX Runtime) instead of PyTorch, and the Chroma index is rebuilt during the
-build from the committed `chunks.jsonl` and `embeddings.npy`.
+Vercel auto-detects the FastAPI app in `app.py`. No `vercel.json` is needed.
+The prebuilt embeddings, chunks, and ONNX embedding model are committed under
+`assets/` and loaded read-only. Per-request retrieval and answer logs go to
+`/tmp`; nothing writes to the deployment bundle. Keeping ChromaDB out of the
+runtime dependencies also keeps the function well under Vercel's 500 MB Python
+bundle limit.
 
-| Setting | Value |
-|---|---|
-| Environment | Python 3 |
-| Root Directory | *(blank)* |
-| Build Command | `pip install -r requirements.txt && python -m src.cli index --rebuild` |
-| Start Command | `streamlit run src/app/streamlit_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true` |
+Add the key for the configured provider in Project Settings -> Environment
+Variables (for example `GROQ_API_KEY`). Ingestion and retrieval work without a
+key; live answers fall back safely when it is missing.
 
-Set these environment variables in the Render dashboard:
+To refresh the prebuilt assets after re-ingesting locally:
 
-- `GROQ_API_KEY` — key for live answers
-- `PYTHON_VERSION` — `3.11.9`
+```powershell
+python -m src.cli ingest
+Copy-Item artifacts/02_chunks/chunks.jsonl assets/index/ -Force
+Copy-Item artifacts/03_embeddings/embeddings.npy assets/index/ -Force
+Copy-Item artifacts/03_embeddings/index_manifest.json assets/index/ -Force
+```
+
+The model files in `assets/fastembed/all-MiniLM-L6-v2-onnx/` are loaded with
+`specific_model_path`, so no model download happens at runtime.
 
 ## Guardrails
 
@@ -150,8 +161,8 @@ pytest -q
 | `artifacts/06_eval/` | Evaluation report |
 
 Only `artifacts/02_chunks/chunks.jsonl`, `artifacts/03_embeddings/embeddings.npy`,
-and `artifacts/03_embeddings/index_manifest.json` are committed. The rest is
-regenerated or treated as run output.
+`artifacts/03_embeddings/index_manifest.json`, and the deployment assets in
+`assets/` are committed. The rest is regenerated or treated as run output.
 
 ## Known Limitations
 

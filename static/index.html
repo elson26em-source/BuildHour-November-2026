@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GrowChat - Mutual Fund FAQ Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1e293b;
+      --muted: #64748b;
+      --purple: #7e22ce;
+      --purple-dark: #2e1065;
+      --amber: #f59e0b;
+      --line: #e2e8f0;
+      --paper: #fafaff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at top right, rgba(233,213,255,.35), transparent 60%),
+        radial-gradient(ellipse at bottom left, rgba(254,240,138,.18), transparent 55%),
+        var(--paper);
+    }
+    .shell { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 280px; flex: 0 0 280px; padding: 1.5rem 1.25rem;
+      background: #fff; border-right: 1px solid var(--line);
+      font-size: .85rem; line-height: 1.5;
+    }
+    .sidebar h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; margin: 0 0 .75rem; color: var(--purple); }
+    .sidebar p { margin: .5rem 0; }
+    .sidebar .note { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: .7rem; }
+    .warning {
+      margin-top: 1rem; padding: .6rem .75rem; border-radius: .5rem;
+      background: #fffbeb; border: 1px solid #fde68a; color: #92400e; font-size: .75rem;
+    }
+    main { flex: 1; max-width: 58rem; margin: 0 auto; padding: 2rem 1.5rem 8rem; }
+    .hero { text-align: center; margin-bottom: 1.25rem; }
+    .badge {
+      display: inline-flex; align-items: center; gap: .4rem; padding: .28rem .75rem;
+      border-radius: 999px; background: rgba(255,251,235,.6); border: 1px solid #fde047;
+      color: #334155; font-family: 'JetBrains Mono', monospace; font-size: .66rem;
+      letter-spacing: .12em; text-transform: uppercase;
+    }
+    .badge .dot { width: .45rem; height: .45rem; border-radius: 999px; background: #fbbf24; }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 800; letter-spacing: -.03em;
+      color: var(--purple); font-size: 2.6rem; margin: .5rem 0 .2rem;
+    }
+    .subtitle { color: #334155; max-width: 34rem; margin: 0 auto; }
+    .disclaimer {
+      max-width: 42rem; margin: 1rem auto 0; padding: .65rem 1rem;
+      background: #f6f8fe; border: 1px solid #e2e8f8; border-radius: .5rem;
+      color: #553c9a; font-weight: 500; text-align: left;
+    }
+    .suggested-label {
+      position: relative; text-align: center; margin: 1.25rem 0 .9rem;
+      color: var(--muted); font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem; letter-spacing: .16em; text-transform: uppercase;
+    }
+    .suggested-label::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line); }
+    .suggested-label span { position: relative; background: var(--paper); padding: 0 .75rem; }
+    .examples { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+    .examples button {
+      background: #fff; color: #334155; border: 1px solid var(--line); border-radius: 999px;
+      padding: .45rem .9rem; font: 500 .78rem 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04); transition: .18s ease;
+    }
+    .examples button::after { content: " ↗"; color: var(--amber); }
+    .examples button:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); }
+    .messages { margin-top: 1.5rem; display: grid; gap: 1rem; }
+    .message { display: flex; gap: .75rem; align-items: flex-start; }
+    .message.user { flex-direction: row-reverse; }
+    .avatar {
+      flex: 0 0 2rem; height: 2rem; border-radius: .5rem; display: grid; place-items: center;
+      font-size: .75rem; font-family: 'JetBrains Mono', monospace;
+    }
+    .message.user .avatar { background: #faf5ff; border: 1px solid #f3e8ff; color: #8b5cf6; }
+    .message.assistant .avatar { background: var(--purple-dark); border: 1px solid rgba(46,16,101,.6); color: #fcd34d; }
+    .bubble {
+      max-width: 46rem; background: rgba(255,255,255,.95); border: 1px solid rgba(139,92,246,.4);
+      border-radius: .75rem; padding: .9rem 1rem; box-shadow: 0 1px 3px rgba(15,23,42,.05);
+      overflow-wrap: anywhere;
+    }
+    .message.user .bubble { border-color: #f3e8ff; }
+    .bubble p { margin: 0 0 .5rem; line-height: 1.55; }
+    .bubble .caption { color: var(--muted); font: .7rem 'JetBrains Mono', monospace; margin: .5rem 0 0; }
+    .bubble .error { color: #b91c1c; }
+    .bubble .empty-index { padding: .6rem .75rem; background:#fffbeb; border:1px solid #fde68a; border-radius:.5rem; color:#92400e; }
+    .bubble code { background: #f8fafc; color: #6b21a8; font-family: 'JetBrains Mono', monospace; font-size: .75rem; }
+    .source {
+      display: inline-block; margin: .25rem .35rem 0 0; padding: .25rem .75rem;
+      background: rgba(250,245,255,.8); border: 1px solid #e9d5ff; border-radius: 999px;
+      color: #581c87; font-size: .72rem; font-weight: 500; text-decoration: none;
+    }
+    .source:hover { background: #f3e8ff; }
+    details { margin-top: .75rem; border: 1px solid var(--line); border-radius: .5rem; padding: .4rem .6rem; }
+    summary { cursor: pointer; color: var(--muted); font: .78rem 'JetBrains Mono', monospace; }
+    .diag { font: .72rem/1.6 'JetBrains Mono', monospace; color: #475569; }
+    .diag .label { color: #6b21a8; }
+    table { border-collapse: collapse; margin: .35rem 0; font-size: .7rem; }
+    th, td { border: 1px solid var(--line); padding: .2rem .4rem; text-align: left; }
+    pre { margin: .3rem 0; white-space: pre-wrap; background: #f8fafc; padding: .4rem; border-radius: .35rem; color: #6b21a8; }
+    .composer {
+      position: fixed; left: 50%; transform: translateX(-50%); bottom: 1.25rem;
+      width: min(46rem, calc(100% - 3rem)); display: flex; gap: .5rem;
+      background: #fff; border: 1px solid #d8b4fe; border-radius: 1rem;
+      padding: .5rem; box-shadow: 0 10px 30px -10px rgba(147,51,234,.18);
+    }
+    .composer:focus-within { border-color: #a855f7; box-shadow: 0 0 0 3px rgba(216,180,254,.35); }
+    .composer input { flex: 1; border: 0; outline: 0; padding: .6rem; font: inherit; color: var(--ink); background: transparent; }
+    .composer button {
+      border: 0; border-radius: 999px; padding: .5rem 1rem; color: #fff; cursor: pointer;
+      background: linear-gradient(135deg, #9333ea, #c026d3); font-weight: 600;
+    }
+    .composer button:disabled { opacity: .5; cursor: wait; }
+    @media (max-width: 760px) {
+      .shell { display: block; }
+      .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
+      main { padding-top: 1rem; }
+      .bubble { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <h2>About this assistant</h2>
+      <p id="sidebar-disclaimer"></p>
+      <p>The assistant answers only from the five scraped Groww pages. It does not provide investment advice.</p>
+      <p class="note">Configuration: config.yaml (deployment-managed)</p>
+      <div class="warning" id="key-warning" hidden></div>
+    </aside>
+    <main>
+      <section class="hero">
+        <div class="badge"><span class="dot"></span>Mutual Fund Intelligence &bull; Facts-Only</div>
+        <h1>GrowChat</h1>
+        <p class="subtitle">Instant factual fund stats, expense ratios, portfolio compositions, and exit loads.</p>
+        <div class="disclaimer" id="disclaimer"></div>
+      </section>
+      <div class="suggested-label"><span>Suggested Queries</span></div>
+      <div class="examples" id="examples"></div>
+      <div class="messages" id="messages" aria-live="polite"></div>
+    </main>
+  </div>
+  <form class="composer" id="chat-form">
+    <input id="query" autocomplete="off" placeholder="Ask a factual question about these funds (managers, expense ratio, exit loads)...">
+    <button id="send" type="submit">Send</button>
+  </form>
+
+  <script>
+    const state = { config: null, messages: [], busy: false };
+    const messagesEl = document.getElementById("messages");
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("query");
+    const sendButton = document.getElementById("send");
+
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function keyValue(parent, label, value) {
+      const row = element("div", "diag");
+      row.appendChild(element("span", "label", label + ": "));
+      row.appendChild(document.createTextNode(value === undefined || value === null || value === "" ? "not available" : String(value)));
+      parent.appendChild(row);
+    }
+
+    function renderDiagnostics(result) {
+      const details = element("details");
+      details.appendChild(element("summary", null, "Diagnostics"));
+      const body = element("div", "diag");
+      const d = result.diagnostics || {};
+      keyValue(body, "Request ID", result.request_id);
+      keyValue(body, "Status", result.status);
+      keyValue(body, "Intent", result.intent);
+      if (d.pii_detected) keyValue(body, "PII detected", "True (query not persisted)");
+      if (d.filters) keyValue(body, "Filters", JSON.stringify(d.filters));
+      keyValue(body, "Low confidence", d.low_confidence);
+      keyValue(body, "Section unavailable", d.section_unavailable);
+      keyValue(body, "Scheme unavailable", d.scheme_unavailable);
+      keyValue(body, "Retried without filters", d.retry_without_filters);
+      if ((result.hits || []).length) {
+        body.appendChild(element("div", "label", "Retrieved chunks:"));
+        const table = element("table");
+        const head = element("tr");
+        ["chunk_id", "scheme", "section", "score"].forEach((name) => head.appendChild(element("th", null, name)));
+        table.appendChild(head);
+        result.hits.forEach((hit) => {
+          const row = element("tr");
+          [hit.chunk_id, hit.scheme, hit.section, hit.score].forEach((value) => row.appendChild(element("td", null, String(value))));
+          table.appendChild(row);
+        });
+        body.appendChild(table);
+      }
+      keyValue(body, "Fallback source", result.fallback_source_url || d.fallback_source_url);
+      keyValue(body, "Retrieval artifact", d.retrieval_artifact);
+      if (d.validation && d.validation.checks) {
+        keyValue(body, "Validation checks", JSON.stringify(d.validation.checks));
+      }
+      if ((d.llm_attempts || []).length) {
+        keyValue(body, "LLM attempts", JSON.stringify(d.llm_attempts.map((a) => ({ strict: a.strict, error: a.error }))));
+      }
+      keyValue(body, "Answer artifact", d.answer_artifact || "not persisted");
+      if (d.error) keyValue(body, "Error", d.error);
+      details.appendChild(body);
+      return details;
+    }
+
+    function renderResult(bubble, result) {
+      if (result.empty_index) {
+        const warn = element("div", "empty-index", result.answer || "The knowledge base is empty.");
+        bubble.appendChild(warn);
+        const code = element("code", null, "python -m src.cli ingest");
+        bubble.appendChild(code);
+      } else {
+        bubble.appendChild(element("p", null, result.answer));
+      }
+      if (result.citation_url) {
+        const link = element("a", "source", "Open source");
+        link.href = result.citation_url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        bubble.appendChild(link);
+      }
+      if (result.last_updated) {
+        bubble.appendChild(element("p", "caption", "Last updated from sources: " + result.last_updated));
+      }
+      bubble.appendChild(renderDiagnostics(result));
+    }
+
+    function render() {
+      messagesEl.replaceChildren();
+      state.messages.forEach((message) => {
+        const wrap = element("div", "message user");
+        wrap.appendChild(element("div", "avatar", "You"));
+        const bubble = element("div", "bubble");
+        bubble.appendChild(element("p", null, message.query));
+        wrap.appendChild(bubble);
+        messagesEl.appendChild(wrap);
+
+        const reply = element("div", "message assistant");
+        reply.appendChild(element("div", "avatar", "G"));
+        const answer = element("div", "bubble");
+        if (message.error) {
+          answer.appendChild(element("p", "error", message.error));
+        } else {
+          renderResult(answer, message.result);
+        }
+        reply.appendChild(answer);
+        messagesEl.appendChild(reply);
+      });
+      if (state.busy) {
+        const reply = element("div", "message assistant");
+        reply.appendChild(element("div", "avatar", "G"));
+        reply.appendChild(element("div", "bubble", "Checking the scraped sources..."));
+        messagesEl.appendChild(reply);
+      }
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    async function loadConfig() {
+      const response = await fetch("/api/config");
+      if (!response.ok) return;
+      const config = await response.json();
+      state.config = config;
+      document.getElementById("disclaimer").textContent = config.disclaimer;
+      document.getElementById("sidebar-disclaimer").textContent = config.disclaimer;
+      const examples = document.getElementById("examples");
+      examples.replaceChildren();
+      (config.examples || []).forEach((example) => {
+        const button = element("button", null, example);
+        button.type = "button";
+        button.addEventListener("click", () => ask(example));
+        examples.appendChild(button);
+      });
+      if (!config.api_key_configured) {
+        const warning = document.getElementById("key-warning");
+        warning.textContent = "No " + config.api_key_env + " detected. Factual answers will use the safe fallback until it is set in the deployment environment.";
+        warning.hidden = false;
+      }
+    }
+
+    async function ask(query) {
+      if (state.busy || !query.trim()) return;
+      state.busy = true;
+      render();
+      try {
+        const response = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: query })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          state.messages.push({ query: query, error: data.detail || "Answer error." });
+        } else {
+          state.messages.push({ query: data.query, result: data });
+        }
+      } catch (error) {
+        state.messages.push({ query: query, error: "Answer error: " + error.message });
+      }
+      state.busy = false;
+      input.value = "";
+      render();
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const query = input.value;
+      ask(query);
+    });
+
+    loadConfig();
+  </script>
+</body>
+</html>

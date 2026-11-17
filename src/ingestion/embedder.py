@@ -48,8 +48,15 @@ class _FastEmbedAdapter:
     adapter is what makes the app fit on a 512 MB instance.
     """
 
-    def __init__(self, model_name: str, text_embedding_cls: Any) -> None:
-        self._model = text_embedding_cls(model_name=model_name)
+    def __init__(
+        self,
+        model_name: str,
+        text_embedding_cls: Any,
+        **model_kwargs: Any,
+    ) -> None:
+        self._model = text_embedding_cls(
+            model_name=model_name, **model_kwargs
+        )
 
     def get_sentence_embedding_dimension(self) -> int:
         return int(self._model.embedding_size)
