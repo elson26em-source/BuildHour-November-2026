@@ -6,7 +6,14 @@ from types import SimpleNamespace
 import pytest
 
 import app as server
+from src.config.schema import normalize_api_key
 from src.guardrails.templates import EMPTY_INDEX_MESSAGE
+
+
+def test_normalize_api_key_strips_name_prefix_and_newline() -> None:
+    assert normalize_api_key("GROQ_API_KEY=gsk_test\n", "GROQ_API_KEY") == "gsk_test"
+    assert normalize_api_key(" gsk_test ", "GROQ_API_KEY") == "gsk_test"
+    assert normalize_api_key(None, "GROQ_API_KEY") is None
 
 
 def test_home_serves_chat_page_with_relative_api_paths() -> None:
@@ -54,6 +61,7 @@ def test_serialize_result_cleans_body_and_keeps_diagnostics() -> None:
             hits=(SimpleNamespace(chunk_id="c1", scheme="s", section="expense_ratio", score=0.91234),),
             candidates=(),
             fallback_source_url=None,
+            retry_without_filters=True,
         ),
     )
 
@@ -62,6 +70,7 @@ def test_serialize_result_cleans_body_and_keeps_diagnostics() -> None:
     assert payload["answer"] == "A short fact."
     assert payload["citation_url"] == "https://groww.in/mutual-funds"
     assert payload["hits"][0]["score"] == 0.9123
+    assert payload["retry_without_filters"] is True
     assert payload["diagnostics"]["llm_attempts"] == [
         {"strict": False, "error": None}
     ]

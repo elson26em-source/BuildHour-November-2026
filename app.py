@@ -123,6 +123,9 @@ def serialize_result(result: AnswerResult, display_query: str) -> dict[str, Any]
         "last_updated": result.last_updated,
         "diagnostics": diagnostics,
         "hits": hits,
+        "retry_without_filters": (
+            retrieval.retry_without_filters if retrieval is not None else None
+        ),
         "fallback_source_url": (
             retrieval.fallback_source_url if retrieval is not None else None
         ),

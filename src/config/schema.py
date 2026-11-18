@@ -31,6 +31,16 @@ PROVIDER_API_KEY_ENV = {
 }
 
 
+def normalize_api_key(value: str | None, env_name: str) -> str | None:
+    if value is None:
+        return None
+    cleaned = value.strip()
+    prefix = f"{env_name}="
+    if cleaned.upper().startswith(prefix.upper()):
+        cleaned = cleaned[len(prefix) :].strip()
+    return cleaned or None
+
+
 @dataclass(frozen=True)
 class AppConfig:
     name: str

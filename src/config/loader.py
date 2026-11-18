@@ -19,6 +19,7 @@ from .schema import (
     DEFAULT_USER_AGENT,
     PROVIDER_API_KEY_ENV,
     SUPPORTED_LLM_PROVIDERS,
+    normalize_api_key,
     AppConfig,
     ChunkingConfig,
     Config,
@@ -329,8 +330,8 @@ def _build_config(raw: dict[str, Any], root: Path) -> Config:
 
 
 def resolve_api_key(config: Config) -> str | None:
-    value = os.environ.get(config.llm.api_key_env, "").strip()
-    return value or None
+    value = os.environ.get(config.llm.api_key_env, "")
+    return normalize_api_key(value, config.llm.api_key_env)
 
 
 def load_config(

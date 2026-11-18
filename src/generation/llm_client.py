@@ -5,7 +5,7 @@ from typing import Any
 
 import requests
 
-from src.config.schema import Config, LLMConfig
+from src.config.schema import Config, LLMConfig, normalize_api_key
 
 DEFAULT_TIMEOUT_SECONDS = 30.0
 
@@ -30,7 +30,10 @@ class LLMClient:
         self.session = session or requests.Session()
 
     def _api_key(self) -> str:
-        key = os.environ.get(self.llm_config.api_key_env)
+        key = normalize_api_key(
+            os.environ.get(self.llm_config.api_key_env),
+            self.llm_config.api_key_env,
+        )
         if not key:
             raise LLMError(
                 f"Missing API key for LLM provider '{self.llm_config.provider}': "

@@ -188,7 +188,7 @@
       keyValue(body, "Low confidence", d.low_confidence);
       keyValue(body, "Section unavailable", d.section_unavailable);
       keyValue(body, "Scheme unavailable", d.scheme_unavailable);
-      keyValue(body, "Retried without filters", d.retry_without_filters);
+      keyValue(body, "Retried without filters", result.retry_without_filters);
       if ((result.hits || []).length) {
         body.appendChild(element("div", "label", "Retrieved chunks:"));
         const table = element("table");
@@ -234,6 +234,9 @@
       }
       if (result.last_updated) {
         bubble.appendChild(element("p", "caption", "Last updated from sources: " + result.last_updated));
+      }
+      if (result.status === "error" && result.diagnostics && result.diagnostics.error) {
+        bubble.appendChild(element("p", "error", "Error: " + result.diagnostics.error));
       }
       bubble.appendChild(renderDiagnostics(result));
     }
