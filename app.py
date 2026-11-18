@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 from dataclasses import replace
@@ -15,6 +16,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config.loader import ConfigError, load_config, resolve_api_key
+from src.config.schema import normalize_api_key
 from src.generation.answerer import AnswerError, Answerer, AnswerResult
 from src.generation.validator import clean_body
 from src.guardrails.templates import EMPTY_INDEX_MESSAGE
@@ -147,6 +149,19 @@ def config_info() -> dict[str, Any]:
         "api_key_env": config.llm.api_key_env,
         "api_key_configured": resolve_api_key(config) is not None,
         "empty_index_message": EMPTY_INDEX_MESSAGE,
+    }
+
+
+@app.get("/api/health")
+def health() -> dict[str, Any]:
+    config = load_runtime_config()
+    return {
+        "provider": config.llm.provider,
+        "model": config.llm.model,
+        "groq_api_key_present": (
+            normalize_api_key(os.environ.get("GROQ_API_KEY"), "GROQ_API_KEY")
+            is not None
+        ),
     }
 
 

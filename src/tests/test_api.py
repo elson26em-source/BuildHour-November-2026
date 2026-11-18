@@ -33,6 +33,21 @@ def test_config_info_exposes_ui_defaults() -> None:
     assert isinstance(info["api_key_configured"], bool)
 
 
+def test_health_reports_provider_model_and_key_presence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("GROQ_API_KEY", "GROQ_API_KEY=test-key\n")
+    info = server.health()
+
+    assert info["provider"] == "groq"
+    assert info["model"] == "qwen/qwen3.8-27b"
+    assert info["groq_api_key_present"] is True
+    assert "test-key" not in str(info)
+
+    monkeypatch.delenv("GROQ_API_KEY")
+    assert server.health()["groq_api_key_present"] is False
+
+
 def test_runtime_config_serves_bundled_index_and_logs_to_temp_dir() -> None:
     config = server.load_runtime_config()
 
