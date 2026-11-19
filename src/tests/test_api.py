@@ -23,6 +23,9 @@ def test_home_serves_chat_page_with_relative_api_paths() -> None:
     assert 'fetch("/api/ask"' in html
     assert 'fetch("/api/config"' in html
     assert "http://" not in html.replace("https://fonts.googleapis.com", "")
+    assert "Configuration: config.yaml" not in html
+    assert "Diagnostics" not in html
+    assert "renderDiagnostics" not in html
 
 
 def test_config_info_exposes_ui_defaults() -> None:

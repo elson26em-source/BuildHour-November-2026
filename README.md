@@ -88,8 +88,7 @@ uvicorn app:app --reload
 Open `http://localhost:8000`. The page calls the backend through relative
 `/api/config` and `/api/ask` routes, so the same build works locally and on
 Vercel. It keeps the facts-only disclaimer, three example questions, chat
-history, citation links, last-updated lines, and a diagnostics expander with
-request IDs, retrieved chunks and scores, validation checks, and artifact paths.
+history, citation links, and last-updated lines.
 If the collection is empty, it shows the ingestion hint.
 
 ## Deploy on Vercel (Hobby)

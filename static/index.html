@@ -100,13 +100,6 @@
       color: #581c87; font-size: .72rem; font-weight: 500; text-decoration: none;
     }
     .source:hover { background: #f3e8ff; }
-    details { margin-top: .75rem; border: 1px solid var(--line); border-radius: .5rem; padding: .4rem .6rem; }
-    summary { cursor: pointer; color: var(--muted); font: .78rem 'JetBrains Mono', monospace; }
-    .diag { font: .72rem/1.6 'JetBrains Mono', monospace; color: #475569; }
-    .diag .label { color: #6b21a8; }
-    table { border-collapse: collapse; margin: .35rem 0; font-size: .7rem; }
-    th, td { border: 1px solid var(--line); padding: .2rem .4rem; text-align: left; }
-    pre { margin: .3rem 0; white-space: pre-wrap; background: #f8fafc; padding: .4rem; border-radius: .35rem; color: #6b21a8; }
     .composer {
       position: fixed; left: 50%; transform: translateX(-50%); bottom: 1.25rem;
       width: min(46rem, calc(100% - 3rem)); display: flex; gap: .5rem;
@@ -134,7 +127,6 @@
       <h2>About this assistant</h2>
       <p id="sidebar-disclaimer"></p>
       <p>The assistant answers only from the five scraped Groww pages. It does not provide investment advice.</p>
-      <p class="note">Configuration: config.yaml (deployment-managed)</p>
       <div class="warning" id="key-warning" hidden></div>
     </aside>
     <main>
@@ -159,61 +151,12 @@
     const messagesEl = document.getElementById("messages");
     const form = document.getElementById("chat-form");
     const input = document.getElementById("query");
-    const sendButton = document.getElementById("send");
 
     function element(tag, className, text) {
       const node = document.createElement(tag);
       if (className) node.className = className;
       if (text !== undefined) node.textContent = text;
       return node;
-    }
-
-    function keyValue(parent, label, value) {
-      const row = element("div", "diag");
-      row.appendChild(element("span", "label", label + ": "));
-      row.appendChild(document.createTextNode(value === undefined || value === null || value === "" ? "not available" : String(value)));
-      parent.appendChild(row);
-    }
-
-    function renderDiagnostics(result) {
-      const details = element("details");
-      details.appendChild(element("summary", null, "Diagnostics"));
-      const body = element("div", "diag");
-      const d = result.diagnostics || {};
-      keyValue(body, "Request ID", result.request_id);
-      keyValue(body, "Status", result.status);
-      keyValue(body, "Intent", result.intent);
-      if (d.pii_detected) keyValue(body, "PII detected", "True (query not persisted)");
-      if (d.filters) keyValue(body, "Filters", JSON.stringify(d.filters));
-      keyValue(body, "Low confidence", d.low_confidence);
-      keyValue(body, "Section unavailable", d.section_unavailable);
-      keyValue(body, "Scheme unavailable", d.scheme_unavailable);
-      keyValue(body, "Retried without filters", result.retry_without_filters);
-      if ((result.hits || []).length) {
-        body.appendChild(element("div", "label", "Retrieved chunks:"));
-        const table = element("table");
-        const head = element("tr");
-        ["chunk_id", "scheme", "section", "score"].forEach((name) => head.appendChild(element("th", null, name)));
-        table.appendChild(head);
-        result.hits.forEach((hit) => {
-          const row = element("tr");
-          [hit.chunk_id, hit.scheme, hit.section, hit.score].forEach((value) => row.appendChild(element("td", null, String(value))));
-          table.appendChild(row);
-        });
-        body.appendChild(table);
-      }
-      keyValue(body, "Fallback source", result.fallback_source_url || d.fallback_source_url);
-      keyValue(body, "Retrieval artifact", d.retrieval_artifact);
-      if (d.validation && d.validation.checks) {
-        keyValue(body, "Validation checks", JSON.stringify(d.validation.checks));
-      }
-      if ((d.llm_attempts || []).length) {
-        keyValue(body, "LLM attempts", JSON.stringify(d.llm_attempts.map((a) => ({ strict: a.strict, error: a.error }))));
-      }
-      keyValue(body, "Answer artifact", d.answer_artifact || "not persisted");
-      if (d.error) keyValue(body, "Error", d.error);
-      details.appendChild(body);
-      return details;
     }
 
     function renderResult(bubble, result) {
@@ -235,10 +178,6 @@
       if (result.last_updated) {
         bubble.appendChild(element("p", "caption", "Last updated from sources: " + result.last_updated));
       }
-      if (result.status === "error" && result.diagnostics && result.diagnostics.error) {
-        bubble.appendChild(element("p", "error", "Error: " + result.diagnostics.error));
-      }
-      bubble.appendChild(renderDiagnostics(result));
     }
 
     function render() {
